@@ -1,17 +1,14 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Update Library
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches: [main]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -25,12 +22,22 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: 1. Set-up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - name: 2. Install dependencies
+        run: npm i
+
+      - name: 3. Install dependencies
+        run: npm i
+
+      - name: 4. Run build
+        run: npm run build
+
+      - name: 5. Semantic release
+        env:
+          GH_TOKEN: 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
+          NPM_TOKEN: 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
+        run: npx semantic-release

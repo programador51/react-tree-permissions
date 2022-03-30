@@ -54,8 +54,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "clean": "rimraf dist/",
+    "copy-files": "copyfiles -u 1 src/**/*.css dist/",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run clean && tsc && npm run copy-files",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
