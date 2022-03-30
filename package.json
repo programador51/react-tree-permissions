@@ -1,7 +1,44 @@
 {
   "name": "react-tree-permissions",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "license": "UNLICENSED",
+  "typings": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "homepage": "http://amplus.com.mx/",
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
+  "files": [
+    "dist"
+  ],
+  "author": {
+    "name": "Jose Luis Perez Olguin",
+    "email": "gskitcat@gmail.com",
+    "url": "https://silly-ritchie-eec7bf.netlify.app/"
+  },
+  "description": "Render a three to assign permissions to an user",
+  "keywords": [
+    "react",
+    "frontend",
+    "permissions"
+  ],
+  "contributors": [
+    {
+      "email": "aalardin@saiko.mx",
+      "name": "Adrian Alardin"
+    },
+    {
+      "email": "eberlanga@saiko.mx",
+      "name": "Ernesto Berlanga"
+    },
+    {
+      "email": "ddiaz@saiko.mx",
+      "name": "Delia Diaz"
+    }
+  ],
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
@@ -63,6 +100,17 @@
     "@storybook/preset-create-react-app": "^4.1.0",
     "@storybook/react": "^6.4.19",
     "@storybook/testing-library": "^0.0.9",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "semantic-release": "^19.0.2",
     "webpack": "^5.70.0"
-  }
+  },
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@semantic-release/github",
+    "@semantic-release/npm",
+    "@semantic-release/git"
+  ]
 }
