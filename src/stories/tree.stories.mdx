@@ -1,0 +1,67 @@
+import { Meta } from "@storybook/addon-docs";
+import TreePermissions from "../Permissions/index";
+import schemaTree from "../sampleTree.ts";
+import "../styles.css";
+
+<Meta title="Tree/Simple" />
+
+# Simple tree
+
+Before explain, the `component` needs the following arguments. They will be explained down below:
+
+```ts
+export interface PropsI {
+  /**
+   * Schema of the root to be rendered
+   */
+  permissions: PermissionI[];
+
+  /**
+   * Indicates the root deepth of the "root". This should't be passed by any circustance as prop. This works
+   * automacally to calculate the deepth of the "root"
+   */
+  level?: number;
+
+  /**
+   * Indicates what the parent element (if it has) of the element on the rooth. This is calculated automatically.
+   * Doesn't need to be passed as argument
+   */
+  parentPermission?: null | string | number;
+
+  /**
+   * All the permissions that must be "checked" once the UI finishes to render
+   */
+  permissionsActive: string[];
+
+  /**
+   * If true, icons will be rendered to collapse/display the nested permissions
+   */
+  showExpands?: boolean;
+
+  /**
+   * This callback returns the following: Permission checked, retrived permissions and new granted permissions
+   */
+  onChange?: (object: onChangeI) => void;
+}
+```
+
+## Example - js
+
+```js
+import TreePermissions from "react-tree-permissions";
+
+// Or .ts , meanwhile you have an array with the structure mentioned
+import schemaTree from "anyPathOfYourProject/schemaTree.js";
+
+export default function MyComponent() {
+  return (
+    <>
+      <TreePermissions permissions={schemaTree} />;
+    </>
+  );
+}
+```
+
+Giving the following result
+
+<TreePermissions permissions={schemaTree} />

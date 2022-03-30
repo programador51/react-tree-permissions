@@ -1,0 +1,75 @@
+* {
+  font-size: 20px;
+}
+
+.permission * {
+  font-size: 1rem;
+}
+
+.permission span.none {
+  min-width: 20px;
+  cursor: default;
+}
+
+.permission p {
+  margin: 0;
+  display: flex;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 30px;
+}
+
+.permission p:hover {
+  background-color: hsla(0, 0%, 50%, 0.144);
+}
+
+.permission label {
+  cursor: pointer;
+  padding: 5px 8px 5px 1px;
+  display: flex;
+  align-items: center;
+}
+
+.permission label:hover {
+  font-weight: bold;
+}
+
+.permission input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.permission {
+  display: flex;
+}
+
+.permission svg {
+  pointer-events: none;
+  width: 1rem;
+}
+
+.permission span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.hidedElement {
+  display: none !important;
+}
+
+.toggle::after {
+  content: "▼";
+  font-size: 0.65rem;
+}
+.upArrow::after {
+  content: "▲";
+}
+
+section {
+  margin: 0 !important;
+  padding: 0 !important;
+}
