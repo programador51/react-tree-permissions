@@ -2,68 +2,37 @@ import { Meta } from "@storybook/addon-docs";
 
 <Meta title="Tree/Types" />
 
-# Types
-
-<ul>
-  <a href="#permissioni">
-    <li>PermissionI</li>
-  </a>
-  <a href="#onchangei">
-    <li>onChangeI</li>
-  </a>
-  <a href="#propsi">
-    <li>PropsI</li>
-  </a>
-  <a href="#indexedpermissioni">
-    <li>IndexedPermissionI</li>
-  </a>
-  <a href="#indexedpermissionsi">
-    <li>IndexedPermissionsI</li>
-  </a>
-</ul>
-
-## PermissionI
-
 ```ts
-/**
- * It's a recursive parameter, will stop until `items` props is not provided
- */
 export interface PermissionI {
   name: string;
   id: string;
   items?: PermissionI[];
 }
-```
 
-## onChangeI
-
-```ts
-export interface onChangeI {
-  /**
-   * Ids's of the permissions that was quit according the parameter of 'permissionsActive'
-   */
-  revokedPermissions: string[];
-
-  /**
-   * Id's of the new permissions that were grantted according the parameter of  'permisionsActive'
-   */
-  grantedPermissions: string[];
-
-  /**
-   * Ids's of all the permissions that are active on the UI
-   */
-  checkedPermissions: string[];
+export interface setPermissionsI {
+  granted: string[];
+  revoked: string[];
+  currentsChecked: string[];
 }
-```
 
-## PropsI
-
-```ts
 export interface PropsI {
+  collpasedIndexed?: {
+    [key: string]: boolean;
+  };
+
+  handleCollapse?: (id: string, wasCollapsed: boolean) => void;
+
+  /**
+   * Initial permissions checked for the UI
+   */
+  initialPermissions?: string[];
+
+  setPermissions: (object: setPermissionsI) => void;
+
   /**
    * Schema of the root to be rendered
    */
-  permissions: PermissionI[];
+  permissionsSchema: PermissionI[];
 
   /**
    * Indicates the root deepth of the "root". This should't be passed by any circustance as prop. This works
@@ -80,53 +49,34 @@ export interface PropsI {
   /**
    * All the permissions that must be "checked" once the UI finishes to render
    */
-  permissionsActive: string[];
+  permissionsActive?: string[];
 
   /**
    * If true, icons will be rendered to collapse/display the nested permissions
    */
   showExpands?: boolean;
 
-  /**
-   * This callback returns the following: Permission checked, retrived permissions and new granted permissions
-   */
   onChange?: (object: onChangeI) => void;
 }
-```
 
-## IndexedPermissionI
-
-```ts
 export interface IndexedPermissionI {
-  /**
-   * Indicates what's the parent permission that contains the current element
-   */
   parentPermission: string;
-
-  /**
-   * Indicates if the element it's expanded
-   */
   isExpanded: boolean;
-
-  /**
-   * Id's of the child permissions that has the current element
-   */
   childrenPermissions: number[] | string[];
-
-  /**
-   * Indicates if the permissions it's selected
-   */
   selected: boolean;
 }
-```
 
-## IndexedPermissionsI
-
-```ts
-/**
- * Permissions indexed
- */
 export interface IndexedPermissionsI {
   [key: string]: IndexedPermissionI;
+}
+
+export interface StateI {
+  initialActive: string[];
+  revoked: string[];
+  active: string[];
+  granted: string[];
+  collapsedItems: {
+    [key: string]: boolean;
+  };
 }
 ```

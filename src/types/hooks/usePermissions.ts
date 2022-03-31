@@ -10,11 +10,31 @@ export interface onChangeI {
   checkedPermissions: string[];
 }
 
+export interface setPermissionsI {
+  granted: string[];
+  revoked: string[];
+  currentsChecked: string[];
+}
+
 export interface PropsI {
+
+  collpasedIndexed?: {
+    [key: string]: boolean
+  }
+
+  handleCollapse?: (id: string, wasCollapsed: boolean) => void
+
+  /**
+   * Initial permissions checked for the UI
+   */
+  initialPermissions?: string[];
+
+  setPermissions: (object: setPermissionsI) => void,
+
   /**
    * Schema of the root to be rendered
    */
-  permissions: PermissionI[];
+  permissionsSchema: PermissionI[];
 
   /**
    * Indicates the root deepth of the "root". This should't be passed by any circustance as prop. This works
@@ -31,7 +51,7 @@ export interface PropsI {
   /**
    * All the permissions that must be "checked" once the UI finishes to render
    */
-  permissionsActive: string[];
+  permissionsActive?: string[];
 
   /**
    * If true, icons will be rendered to collapse/display the nested permissions
@@ -45,7 +65,7 @@ export interface IndexedPermissionI {
   parentPermission: string;
   isExpanded: boolean;
   childrenPermissions: number[] | string[];
-  selected:boolean;
+  selected: boolean;
 }
 
 export interface IndexedPermissionsI {

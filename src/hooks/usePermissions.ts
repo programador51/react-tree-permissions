@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   IndexedPermissionsI,
   PermissionI,
@@ -6,14 +6,24 @@ import {
 } from "../types/hooks/usePermissions";
 
 export default function usePermissions({
-  permissions,
+  permissionsSchema,
   level = 0,
   parentPermission,
   permissionsActive,
+  initialPermissions = [],
+  setPermissions,
   onChange = () => { },
+  collpasedIndexed = {},
+  handleCollapse
 }: PropsI) {
   const [indexedPermissions, setIndexedPermissions] =
     useState<IndexedPermissionsI | null>(null);
+
+  const isExpanded = (idPermissions: string) => {
+    const collapsedItems = Object.keys(collpasedIndexed);
+    const isCollpased = collapsedItems.includes(`${idPermissions}`);
+    return isCollpased;
+  }
 
   const [expandIndexed, setExpandIndexed] = useState<IndexedPermissionsI>({});
 
@@ -24,24 +34,25 @@ export default function usePermissions({
   useEffect(() => {
     if (!indexedPermissions) return;
 
-    permissions.forEach((permission) => {
-      const idCheckbox = document.getElementById(`${permission.id}`);
+    permissionsSchema.forEach((permission) => {
+      const idCheckbox = (document.getElementById(`${permission.id}`) as HTMLInputElement);
 
-      const isPermissionActive = permissionsActive.includes(`${permission.id}`);
+      const isPermissionActive = permissionsActive!.includes(`${permission.id}`);
 
       if (isPermissionActive) {
-        idCheckbox?.click();
+        idCheckbox.checked = true
       }
     });
   }, [indexedPermissions]);
 
   useEffect(() => {
-    const indexedParsed = permissions.reduce(
+    const indexedParsed = permissionsSchema.reduce(
       (indexed: any, permission: PermissionI) => ({
         ...indexed,
         [`${permission.id}`]: {
           parentPermission,
-          selected: permissionsActive.includes(`${permission.id}`),
+          isExpanded: true,
+          selected: true,
           childrenPermissions:
             permission.items?.map((item: any) => item.id) || [],
         },
@@ -54,8 +65,9 @@ export default function usePermissions({
   }, []);
 
   const handleToggle = (
-    e: ChangeEvent<HTMLInputElement>,
-    permission: PermissionI
+    e: any,
+    permission: PermissionI,
+    level: number
   ) => {
     const parentPermission =
       indexedPermissions![`${permission.id}`].parentPermission;
@@ -63,7 +75,7 @@ export default function usePermissions({
     handleParentPermissions(parentPermission, e.target.checked);
     const checkboxes = getCheckboxes();
     const checkedPermissions = getCheckedPermissions();
-    
+
     const indexedNewPermissions = generateIndexedNewPermissions();
 
     const revokedPermissions = getRevokedPermissions();
@@ -73,6 +85,12 @@ export default function usePermissions({
       checkedPermissions: checkedPermissions,
       grantedPermissions: providedPermissions,
       revokedPermissions: revokedPermissions,
+    });
+
+    setPermissions({
+      granted: providedPermissions,
+      revoked: revokedPermissions,
+      currentsChecked: checkedPermissions
     });
 
     /**
@@ -172,7 +190,7 @@ export default function usePermissions({
      * @returns {string[]}
      */
     function getRevokedPermissions(): string[] {
-      return permissionsActive.reduce(
+      return initialPermissions.reduce(
         (revokedPermissions: string[], permission: string) => {
           if (indexedNewPermissions[permission] !== undefined) {
             return revokedPermissions;
@@ -191,7 +209,7 @@ export default function usePermissions({
     function getProvidedPermissions(): string[] {
       return checkedPermissions.reduce((newChecks: string[], permission) => {
         const indexedInitializedPermissions: { [key: string]: boolean } =
-          permissionsActive.reduce(
+          initialPermissions.reduce(
             (indexed, permission) => ({
               ...indexed,
               [permission]: true,
@@ -208,21 +226,19 @@ export default function usePermissions({
     }
   };
 
+
   /**
    * Handle the button to expand or collapse the children/parent element
-   * @param idChildPermission - Id of the parent that has the permission
+   * @param idPermission - Id of the parent that has the permission
    */
-  const handleExpand = (idChildPermission: string) => {
-    const childrenContainer = document.getElementById(`childrenOf-${idChildPermission}`);
-    const parentContainer = document.getElementById(`toggle-${idChildPermission}`);
-
-    if(childrenContainer){
-      childrenContainer.classList.toggle('hidedElement');
-    }
-
-    if(parentContainer){
-      parentContainer.classList.toggle('upArrow');
-    }
+  const handleExpand = (idPermission: string, newValue: boolean) => {
+    // setExpandIndexed({
+    //   ...expandIndexed,
+    //   [idPermission]: {
+    //     ...expandIndexed[idPermission],
+    //     isExpanded: !expandIndexed[idPermission].isExpanded
+    //   }
+    // })
   };
 
   return {
@@ -232,5 +248,7 @@ export default function usePermissions({
     handleToggle,
     expandIndexed,
     classNameContainerPermissions,
+    permissionsActive,
+    isExpanded
   };
 }

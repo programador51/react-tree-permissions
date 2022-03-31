@@ -1,5 +1,6 @@
-import { Meta } from "@storybook/addon-docs";
+import { Meta, Story } from "@storybook/addon-docs";
 import TreePermissions from "../Permissions/index";
+import { usePermissions } from "../hooks/useTreePermissions.ts";
 import schemaTree from "../sampleTree.ts";
 import "../styles.css";
 
@@ -11,10 +12,23 @@ Before explain, the `component` needs the following arguments. They will be expl
 
 ```ts
 export interface PropsI {
+  collpasedIndexed?: {
+    [key: string]: boolean;
+  };
+
+  handleCollapse?: (id: string, wasCollapsed: boolean) => void;
+
+  /**
+   * Initial permissions checked for the UI
+   */
+  initialPermissions?: string[];
+
+  setPermissions: (object: setPermissionsI) => void;
+
   /**
    * Schema of the root to be rendered
    */
-  permissions: PermissionI[];
+  permissionsSchema: PermissionI[];
 
   /**
    * Indicates the root deepth of the "root". This should't be passed by any circustance as prop. This works
@@ -31,16 +45,13 @@ export interface PropsI {
   /**
    * All the permissions that must be "checked" once the UI finishes to render
    */
-  permissionsActive: string[];
+  permissionsActive?: string[];
 
   /**
    * If true, icons will be rendered to collapse/display the nested permissions
    */
   showExpands?: boolean;
 
-  /**
-   * This callback returns the following: Permission checked, retrived permissions and new granted permissions
-   */
   onChange?: (object: onChangeI) => void;
 }
 ```
@@ -48,21 +59,24 @@ export interface PropsI {
 ## Example - js
 
 ```js
-import TreePermissions from "react-tree-permissions";
-
 // Or .ts , meanwhile you have an array with the structure mentioned
+import { useTreePermissions, TreePermissions } from "react-tree-permissions";
+
 import schemaTree from "anyPathOfYourProject/schemaTree.js";
 import "react-tree-permissions/dist/styles.css";
 
 export default function MyComponent() {
+  const { permissions, setPermissionsChecked } = useTreePermissions();
+
   return (
     <>
-      <TreePermissions permissions={schemaTree} />;
+      <TreePermissions
+        permissionsSchema={schemaTree}
+        permissionsActive={permissions.active}
+        setPermissions={setPermissionsChecked}
+      />
+      ;
     </>
   );
 }
 ```
-
-Giving the following result
-
-<TreePermissions permissions={schemaTree} />

@@ -1,5 +1,6 @@
 import { Meta } from "@storybook/addon-docs";
 import TreePermissions from "../Permissions/index";
+import { usePermissions } from "../hooks/useTreePermissions.ts";
 import schemaTree from "../sampleTree.ts";
 import "../styles.css";
 
@@ -11,10 +12,23 @@ This allows you to render buttons to collapse or show the nested permissions of 
 
 ```ts
 export interface PropsI {
+  collpasedIndexed?: {
+    [key: string]: boolean;
+  };
+
+  handleCollapse?: (id: string, wasCollapsed: boolean) => void;
+
+  /**
+   * Initial permissions checked for the UI
+   */
+  initialPermissions?: string[];
+
+  setPermissions: (object: setPermissionsI) => void;
+
   /**
    * Schema of the root to be rendered
    */
-  permissions: PermissionI[];
+  permissionsSchema: PermissionI[];
 
   /**
    * Indicates the root deepth of the "root". This should't be passed by any circustance as prop. This works
@@ -31,16 +45,13 @@ export interface PropsI {
   /**
    * All the permissions that must be "checked" once the UI finishes to render
    */
-  permissionsActive: string[];
+  permissionsActive?: string[];
 
   /**
    * If true, icons will be rendered to collapse/display the nested permissions
    */
   showExpands?: boolean;
 
-  /**
-   * This callback returns the following: Permission checked, retrived permissions and new granted permissions
-   */
   onChange?: (object: onChangeI) => void;
 }
 ```
@@ -48,19 +59,32 @@ export interface PropsI {
 ## Example - js
 
 ```js
-import TreePermissions from "react-tree-permissions";
+import { useTreePermissions, TreePermissions } from "react-tree-permissions";
 
 // Or .ts , meanwhile you have an array with the structure mentioned
 import schemaTree from "anyPathOfYourProject/schemaTree.js";
 import "react-tree-permissions/dist/styles.css";
 
 export default function MyComponent() {
+  const { permissions, setPermissionsChecked, handleCollapse } =
+    useTreePermissions([
+      "0bab85b8-2b1f-4cbb-bd51-9a699a0f1994",
+      "f00840e3-0a71-4a79-9bbf-f2df752b2c95",
+      "cd89a7a9-066d-4961-afc6-0d6d190ff97b",
+    ]);
+
   return (
     <>
-      <TreePermissions permissions={schemaTree} showExpands />;
+      <Permissions
+        permissionsSchema={schemaPermissions}
+        permissionsActive={permissions.active}
+        initialPermissions={permissions.initialActive}
+        collpasedIndexed={permissions.collapsedItems}
+        setPermissions={setPermissionsChecked}
+        handleCollapse={handleCollapse}
+        showExpands
+      />
     </>
   );
 }
 ```
-
-<TreePermissions permissions={schemaTree} showExpands />
