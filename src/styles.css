@@ -1,9 +1,6 @@
-* {
-  font-size: 20px;
-}
-
 .permission * {
   font-size: 1rem;
+  font-weight: normal;
 }
 
 .permission span.none {
